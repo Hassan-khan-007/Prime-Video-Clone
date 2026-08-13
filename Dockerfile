@@ -10,7 +10,7 @@ RUN npm ci
 # Copy all source code
 COPY . .
 
-# Build the React app
+# Build the React app (react-scripts build outputs to 'build')
 RUN npm run build
 
 # Stage 2: Serve the application using a lightweight static server
