@@ -23,12 +23,10 @@ jobs:
 
     - name: Create Kind Cluster
       uses: container-tools/kind-action@v2
-      with:
-        name: chart-testing # Explicitly name the cluster here
 
     - name: Load image into Kind
       run: |
-        kind load docker-image prime-video-app:v1 --name chart-testing
+        kind load docker-image prime-video-app:v1
 
     - name: Deploy to Kubernetes
       run: |
