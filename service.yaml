@@ -7,6 +7,18 @@ spec:
     app: prime-video
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 3000
-  type: NodePort
+      port: 3000        # Service ka khud ka port
+      targetPort: 3000  # Container ke andar ka port (jahan app chal rahi hai)
+  type: ClusterIP
+#apiVersion: v1
+#kind: Service
+#metadata:
+ # name: prime-video-service
+#spec:
+ # selector:
+  #  app: prime-video
+  #ports:
+   # - protocol: TCP
+   #   port: 80
+    #  targetPort: 3000
+  #type: NodePort
