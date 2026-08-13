@@ -24,12 +24,12 @@ spec:
           httpGet:
             path: /                    # Root endpoint par check karega ki app zinda hai ya nahi
             port: 3000
-          initialDelaySeconds: 20      # Container start hone ke 20 second baad check karna shuru karega
+          initialDelaySeconds: 45      # Container start hone ke 20 second baad check karna shuru karega
           periodSeconds: 10            # Har 10 second mein check karega
           
         readinessProbe:
           httpGet:
             path: /                    # Check karega ki app traffic lene ke liye ready hai ya nahi
             port: 3000
-          initialDelaySeconds: 10      # 10 second baad check karega
+          initialDelaySeconds: 30      # 10 second baad check karega
           periodSeconds: 5             # Har 5 second mein check karega
