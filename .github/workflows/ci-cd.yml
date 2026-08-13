@@ -1,0 +1,36 @@
+name: Prime Video CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main", "master" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        load: true
+        tags: prime-video-app:v1
+
+    - name: Create Kind Cluster
+      uses: container-tools/kind-action@v2
+
+    - name: Load image into Kind
+      run: |
+        kind load docker-image prime-video-app:v1 --name chart-testing
+
+    - name: Deploy to Kubernetes
+      run: |
+        kubectl apply -f .
+        kubectl rollout status deployment/prime-video-deployment --timeout=60s
+        kubectl get pods
+        kubectl get svc

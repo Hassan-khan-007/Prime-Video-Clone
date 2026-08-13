@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prime-video-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prime-video
+  template:
+    metadata:
+      labels:
+        app: prime-video
+    spec:
+      containers:
+      - name: web
+        image: prime-video-app:v1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+        env:
+        - name: REDIS_HOST
+          value: "redis-service"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 3
+          periodSeconds: 3
