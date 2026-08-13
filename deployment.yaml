@@ -13,23 +13,23 @@ spec:
         app: prime-video
     spec:
       containers:
-      - name: web
+      - name: prime-video
         image: prime-video-app:v1
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Never
         ports:
-        - containerPort: 3000
-        env:
-        - name: REDIS_HOST
-          value: "redis-service"
+        - containerPort: 3000          # Agar aapka app port 3000 par chalta hai
+        
+        # --- HEALTH CHECKS (Probes) ---
         livenessProbe:
           httpGet:
-            path: /
+            path: /                    # Root endpoint par check karega ki app zinda hai ya nahi
             port: 3000
-          initialDelaySeconds: 5
-          periodSeconds: 5
+          initialDelaySeconds: 45      # Container start hone ke 20 second baad check karna shuru karega
+          periodSeconds: 10            # Har 10 second mein check karega
+          
         readinessProbe:
           httpGet:
-            path: /
+            path: /                    # Check karega ki app traffic lene ke liye ready hai ya nahi
             port: 3000
-          initialDelaySeconds: 3
-          periodSeconds: 3
+          initialDelaySeconds: 30      # 10 second baad check karega
+          periodSeconds: 5             # Har 5 second mein check karega

@@ -27,10 +27,32 @@ jobs:
     - name: Load image into Kind
       run: |
         kind load docker-image prime-video-app:v1
-
+        
     - name: Deploy to Kubernetes
       run: |
-        kubectl apply -f .
+        set +e  # Script ko turant exit hone se roke ga taaki logs print ho sakein
+        
+        kubectl apply -f deployment.yaml
+        kubectl apply -f service.yaml
+        kubectl apply -f redis-deployment.yaml
+        kubectl apply -f redis-service.yaml
+        
+        echo "Waiting for deployment rollout..."
         kubectl rollout status deployment/prime-video-deployment --timeout=60s
+        
+        if [ $? -ne 0 ]; then
+          echo "=== ROLLOUT TIMED OUT. FETCHING DEBUG INFO ==="
+          kubectl get pods
+          echo "=== POD DESCRIPTION ==="
+          kubectl describe pod -l app=prime-video
+          echo "=== POD LOGS ==="
+          kubectl logs -l app=prime-video --tail=50
+          exit 1
+        fi
+        
         kubectl get pods
         kubectl get svc
+        
+        kubectl get pods
+        kubectl get svc
+    
