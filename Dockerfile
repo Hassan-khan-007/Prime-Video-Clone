@@ -21,9 +21,7 @@ WORKDIR /app
 # Install 'serve' globally to host static files
 RUN npm install -g serve
 
-# Copy build artifacts (yeh builder stage se public build folder ko copy karega)
-# Agar aapka build folder 'build' hai toh niche wala chalega, agar 'dist' hai toh 'dist' likhein. 
-# Create React App ke liye default 'build' hota hai.
+# Copy the built files from builder stage (Create React App uses 'build')
 COPY --from=builder /app/build ./build
 
 # Expose port 3000 for Kubernetes
