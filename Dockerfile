@@ -1,38 +1,33 @@
-# Stage 1: Build the application
+# Stage 1: Build the React application
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files to leverage Docker layer caching
+# Copy package files and install dependencies
 COPY package*.json ./
-
-# Install all dependencies
 RUN npm ci
 
-# Copy the rest of the application source code
+# Copy all source code
 COPY . .
 
-# Stage 2: Run the application in production
+# Build the React app for production (Vite ke liye 'dist' banta hai, CRA ke liye 'build')
+RUN npm run build
+
+# Stage 2: Serve the application using a lightweight static server
 FROM node:20-alpine AS runner
 
 WORKDIR /app
 
-# Copy package files and install ONLY production dependencies
-COPY package*.json ./
-RUN npm ci --only=production
+# Install 'serve' globally to host static files
+RUN npm install -g serve
 
-# Copy application files from the builder stage
-COPY --from=builder /app ./
+# Copy the built files from builder stage
+# (Agar aap Vite use kar rahe hain toh folder 'dist' hoga, agar Create React App hai toh 'build' likhein)
+COPY --from=builder /app/dist ./dist
 
-# Create a non-root user for security best practices
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001 && \
-    chown -R nodejs:nodejs /app
-
-USER nodejs
-
-# Expose the application port
+# Expose port 3000 for Kubernetes
 EXPOSE 3000
 
-# Start the application
-CMD ["node", "src/index.js"]
+# Run the app using serve on port 3000
+CMD ["serve", "-s", "dist", "-l", "3000"]
+
