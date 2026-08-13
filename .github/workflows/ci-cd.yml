@@ -26,7 +26,7 @@ jobs:
 
     - name: Load image into Kind
       run: |
-        kind load docker-image prime-video-app:v1 --name chart-testing
+        kind load docker-image prime-video-app:v1
 
     - name: Deploy to Kubernetes
       run: |
