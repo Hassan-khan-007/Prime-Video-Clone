@@ -53,4 +53,5 @@ kubectl port-forward service/prime-video-service 3000:3000
 
 Then run this command to seee the webside
 http://localhost:3000
-
+## 🖥️ Application Preview
+![Prime Video Clone UI](https://github.com/user-attachments/assets/15b37fb7-7b36-4252-8a61-166757b39e10)
