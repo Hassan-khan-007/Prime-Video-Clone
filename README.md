@@ -1,70 +1,56 @@
-# Getting Started with Create React App
+🎬 Prime Video Clone - Cloud-Native Deployment & CI/CD Pipeline
+A containerized, production-grade React application deployed on a local Kubernetes cluster using Docker, Kind (Kubernetes in Docker), and GitHub Actions CI/CD.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+🏗️ Architecture & Complete Deployment Flow
+This project follows a modern DevOps and CloudOps lifecycle. The end-to-end execution flow is structured as follows:
 
-## Available Scripts
+1. Application Containerization (Docker)
+Multi-Stage Build: A multi-stage Dockerfile is utilized to efficiently build the React frontend (Create React App).
 
-In the project directory, you can run:
+Builder Stage: Uses a Node.js Alpine base image to install dependencies (npm ci) and compile the production assets (npm run build).
 
-### `npm start`
+Runner Stage: Leverages a lightweight static file server (serve) to serve the compiled build artifacts on port 3000 securely under a non-root environment.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+2. Infrastructure & Orchestration (Kubernetes)
+Manifests Setup: Declarative Kubernetes configurations (deployment.yaml, service.yaml) are written to manage the application lifecycle.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Caching & Services: An accompanying Redis deployment and service are configured alongside the app to support caching and scaling capabilities.
 
-### `npm test`
+Health Probes: HTTP liveness and readiness probes are integrated to continuously monitor pod health and availability.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. Automated CI/CD Pipeline (GitHub Actions)
+Code changes pushed to the main branch automatically trigger the GitHub Actions workflow.
 
-### `npm run build`
+The pipeline spins up an ephemeral (temporary) Kubernetes cluster using Kind (Kubernetes in Docker) directly within the runner environment.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Robust Error Diagnostics: Integrated bash error handling catches deployment and rollout issues gracefully, automatically dumping kubectl describe pod details and container logs if a timeout occurs.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+🛠️ Step-by-Step Local Execution & Testing Guide
+To run, test, and verify this deployment locally on your machine, follow these steps:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Step 1: Clone the Repository & Build Docker Image
+git clone https://github.com/your-username/Prime-Video-Clone.git
+cd Prime-Video-Clone
+docker build -t prime-video-app:v1 .
+Step 2: Spin Up a Local Kubernetes Cluster (Kind)
+kind create cluster
+Step 3: Load the Docker Image into Kind
+Since the Kind cluster runs in an isolated container environment, load your locally built image directly into it:
+kind load docker-image prime-video-app:v1
+Step 4: Apply Kubernetes Manifests
+Deploy the application and its auxiliary services:
+kubectl apply -f deployment.yaml
+kubectl apply -f service.yaml
+kubectl apply -f redis-deployment.yaml
+kubectl apply -f redis-service.yaml
+Step 5: Verify Pod Status
+Check if all pods and services are running successfully:
+kubectl get pods
+kubectl get svc
+Step 6: Access the Application via Port-Forwarding
+Establish a secure port-forwarding tunnel to your local cluster:
+kubectl port-forward service/prime-video-service 3000:3000
 
-### `npm run eject`
+Then run this command to seee the webside
+http://localhost:3000
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
