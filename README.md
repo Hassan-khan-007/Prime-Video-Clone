@@ -32,26 +32,32 @@ Step 1: Clone the Repository & Build Docker Image
 git clone https://github.com/your-username/Prime-Video-Clone.git
 cd Prime-Video-Clone
 docker build -t prime-video-app:v1 .
+
 Step 2: Spin Up a Local Kubernetes Cluster (Kind)
 kind create cluster
+
 Step 3: Load the Docker Image into Kind
 Since the Kind cluster runs in an isolated container environment, load your locally built image directly into it:
 kind load docker-image prime-video-app:v1
+
 Step 4: Apply Kubernetes Manifests
 Deploy the application and its auxiliary services:
 kubectl apply -f deployment.yaml
 kubectl apply -f service.yaml
 kubectl apply -f redis-deployment.yaml
 kubectl apply -f redis-service.yaml
+
 Step 5: Verify Pod Status
 Check if all pods and services are running successfully:
 kubectl get pods
 kubectl get svc
+
 Step 6: Access the Application via Port-Forwarding
 Establish a secure port-forwarding tunnel to your local cluster:
 kubectl port-forward service/prime-video-service 3000:3000
 
 Then run this command to seee the webside
 http://localhost:3000
+
 ## 🖥️ Application Preview
 ![Prime Video Clone UI](https://github.com/user-attachments/assets/15b37fb7-7b36-4252-8a61-166757b39e10)
