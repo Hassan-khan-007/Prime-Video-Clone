@@ -36,4 +36,18 @@ jobs:
         kubectl rollout status deployment/prime-video-deployment --timeout=60s
         kubectl get pods
         kubectl get svc
+
+        # Rollout status check with automatic debugging logs on failure
+        if ! kubectl rollout status deployment/prime-video-deployment --timeout=60s; then
+          echo "=== ROLLOUT TIMED OUT. FETCHING DEBUG INFO ==="
+          kubectl get pods
+          echo "=== POD DESCRIPTION ==="
+          kubectl describe pod -l app=prime-video
+          echo "=== POD LOGS ==="
+          kubectl logs -l app=prime-video --tail=50
+          exit 1
+        fi
+        
+        kubectl get pods
+        kubectl get svc
     
