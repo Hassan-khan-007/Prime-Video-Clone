@@ -23,8 +23,6 @@ jobs:
 
     - name: Create Kind Cluster
       uses: container-tools/kind-action@v2
-      with:
-        name: chart-testing # Explicitly name the cluster here
 
     - name: Load image into Kind
       run: |
