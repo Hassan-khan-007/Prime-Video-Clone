@@ -17,15 +17,15 @@ spec:
         image: prime-video-app:v1
         imagePullPolicy: Never
         ports:
-        - containerPort: 3000          # Agar aapka app port 3000 par chalta hai
+        - containerPort: 3000          
         
         # --- HEALTH CHECKS (Probes) ---
         livenessProbe:
           httpGet:
-            path: /                    # Root endpoint par check karega ki app zinda hai ya nahi
+            path: /                    
             port: 3000
-          initialDelaySeconds: 45      # Container start hone ke 20 second baad check karna shuru karega
-          periodSeconds: 10            # Har 10 second mein check karega
+          initialDelaySeconds: 45      
+          periodSeconds: 10            
           
         readinessProbe:
           httpGet:
