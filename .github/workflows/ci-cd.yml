@@ -2,7 +2,7 @@ name: Prime Video CI/CD Pipeline
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ "main", ]
 
 jobs:
   deploy:
