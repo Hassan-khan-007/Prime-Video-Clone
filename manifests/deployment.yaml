@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prime-video-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prime-video
+  template:
+    metadata:
+      labels:
+        app: prime-video
+    spec:
+      containers:
+      - name: prime-video
+        image: prime-video-app:v1
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3000          
+        
+        # --- HEALTH CHECKS (Probes) ---
+        livenessProbe:
+          httpGet:
+            path: /                    
+            port: 3000
+          initialDelaySeconds: 45      
+          periodSeconds: 10            
+          
+        readinessProbe:
+          httpGet:
+            path: /                    # Check karega ki app traffic lene ke liye ready hai ya nahi
+            port: 3000
+          initialDelaySeconds: 30      # 10 second baad check karega
+          periodSeconds: 5             # Har 5 second mein check karega
