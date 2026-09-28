@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     tools {
-        nodejs 'NodeJS' // Yeh wahi naam hai jo aapne Manage Jenkins -> Tools mein diya hai
+        nodejs 'NodeJS'
     }
     
     environment {
@@ -29,8 +29,13 @@ pipeline {
                             -Dsonar.host.url=http://host.docker.internal:9000
                         """
                     }
-                    
-                    // Quality Gate check karne ke liye timeout block
+                }
+            }
+        }
+        
+        stage('Quality Gate Check') {
+            steps {
+                script {
                     timeout(time: 5, unit: 'MINUTES') {
                         def qg = waitForQualityGate()
                 
