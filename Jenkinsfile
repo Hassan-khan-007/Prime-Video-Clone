@@ -1,19 +1,19 @@
 pipeline {
     agent any
     environment {
-        SCANNER_HOME = tool 'SonarQubeScanner'
+        SCANNER_HOME = tool 'Sonar'
         IMAGE_NAME = 'your-dockerhub-username/my-local-app'
     }
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/your-username/your-app-repo.git'
+                git branch: 'main', url: 'https://github.com/Hassan-khan-007/Prime-Video-Clone.git'
             }
         }
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarServer') {
-                    sh "${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=my-local-app"
+                withSonarQubeEnv('Sonar') {
+                    sh "${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=my-project"
                 }
             }
         }
