@@ -13,7 +13,14 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('Sonar') {
-                    sh "${SCANNER_HOME}sonar-scanner -Dsonar.projectKey=my-project"
+                    // Ab aapko lamba path likhne ki zaroorat nahi hai, 
+                    // seedha 'sonar-scanner' likhein aur sath me host URL bhi pass karein
+                    sh '''
+                        sonar-scanner \
+                        -Dsonar.projectKey=my-project \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://host.docker.internal:9000
+                    '''
                 }
             }
         }
