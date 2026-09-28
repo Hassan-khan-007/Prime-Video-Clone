@@ -1,7 +1,6 @@
 pipeline {
     agent any
     environment {
-        SCANNER_HOME = tool 'Sonar'
         IMAGE_NAME = 'your-dockerhub-username/my-local-app'
     }
     stages {
@@ -12,15 +11,17 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('Sonar') {
-                    // Ab aapko lamba path likhne ki zaroorat nahi hai, 
-                    // seedha 'sonar-scanner' likhein aur sath me host URL bhi pass karein
-                    sh '''
-                        sonar-scanner \
-                        -Dsonar.projectKey=my-project \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=http://host.docker.internal:9000
-                    '''
+                script {
+                    // Tool ko stage ke andar variable mein assign karein (yeh bilkul sahi tareeqa hai)
+                    def scannerHome = tool 'Sonar'
+                    
+                    withSonarQubeEnv('Sonar') {
+                        sh """
+                            ${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.projectKey=my-project \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=http://host.docker.internal:9000
+                        """
                 }
             }
         }
