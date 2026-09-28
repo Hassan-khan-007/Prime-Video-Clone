@@ -1,6 +1,10 @@
 pipeline {
     agent any
     
+    tools {
+        nodejs 'NodeJS' // Yeh wahi naam hai jo aapne Manage Jenkins -> Tools mein diya hai
+    }
+    
     environment {
         IMAGE_NAME = 'your-dockerhub-username/my-local-app'
     }
