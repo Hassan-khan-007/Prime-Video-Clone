@@ -25,15 +25,17 @@ pipeline {
                             -Dsonar.host.url=http://host.docker.internal:9000
                         """
                     }
+                    
+                    // Quality Gate check karne ke liye timeout block
                     timeout(time: 5, unit: 'MINUTES') {
-                        // SonarQube server se result ka wait karega
                         def qg = waitForQualityGate()
                 
                         if (qg.status != 'OK') {
                             error "Pipeline aborted because Quality Gate failed: ${qg.status}"
                         } else {
                             echo "Quality Gate passed successfully!"
-                
+                        }
+                    }
                 }
             }
         }
