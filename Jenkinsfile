@@ -56,7 +56,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", 
                                                       usernameVariable: 'DOCKER_USER', 
                                                       passwordVariable: 'DOCKER_PASS')]) {
-                        sh """
+                        sh '''
                             # Build docker image using build number tag
                             docker build -t ${IMAGE_NAME}:${env.BUILD_NUMBER} .
                             
@@ -65,7 +65,7 @@ pipeline {
                             
                             # Push image to Docker Hub
                             docker push ${IMAGE_NAME}:${env.BUILD_NUMBER}
-                        """
+                        '''
                     }
                 }
             }
