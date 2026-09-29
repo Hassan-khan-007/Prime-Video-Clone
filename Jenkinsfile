@@ -1,10 +1,6 @@
 pipeline {
     agent any
     
-    options {
-        skipDefaultCheckout() // Yeh double checkout rokega
-    }
-    
     tools {
         nodejs 'NodeJS'
     }
@@ -15,9 +11,10 @@ pipeline {
     }
     
     stages {
-        stage('Clean Workspace') {
+        stage('Checkout Code & Clean') {
             steps {
-                cleanWs() // Workspace clean karne ka sahi tareeqa yeh hai
+                cleanWs()
+                checkout scm
             }
         }
         
