@@ -58,13 +58,13 @@ pipeline {
                                                       passwordVariable: 'DOCKER_PASS')]) {
                         sh '''
                             # Build docker image using build number tag
-                            docker build -t ${IMAGE_NAME}:${env.BUILD_NUMBER} .
+                            docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} .
                             
-                            # Login to Docker Hub
-                            echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+                            # Login to Docker Hub securely
+                            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                             
                             # Push image to Docker Hub
-                            docker push ${IMAGE_NAME}:${env.BUILD_NUMBER}
+                            docker push ${IMAGE_NAME}:${BUILD_NUMBER}
                         '''
                     }
                 }
