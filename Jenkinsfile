@@ -1,6 +1,11 @@
 pipeline {
     agent any
     
+    options {
+        skipDefaultCheckout() // <-- Yeh line double checkout ko rok degi aur error khatam kar degi!
+        cleanWs()
+    }
+    
     tools {
         nodejs 'NodeJS'
     }
@@ -11,8 +16,6 @@ pipeline {
     }
     
     stages {
-        // Checkout stage yahan se hata di hai kyunki SCM script khud fetch kar leti hai
-        
         stage('SonarQube Analysis') {
             steps {
                 script {
