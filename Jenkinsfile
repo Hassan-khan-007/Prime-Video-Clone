@@ -11,11 +11,7 @@ pipeline {
     }
     
     stages {
-        stage('Checkout Code') {
-            steps {
-                git branch: 'main', url: 'https://github.com/Hassan-khan-007/Prime-Video-Clone.git'
-            }
-        }
+        // Checkout stage yahan se hata di hai kyunki SCM script khud fetch kar leti hai
         
         stage('SonarQube Analysis') {
             steps {
