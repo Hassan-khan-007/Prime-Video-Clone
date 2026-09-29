@@ -2,8 +2,7 @@ pipeline {
     agent any
     
     options {
-        skipDefaultCheckout() // <-- Yeh line double checkout ko rok degi aur error khatam kar degi!
-        cleanWs()
+        skipDefaultCheckout() // Yeh double checkout rokega
     }
     
     tools {
@@ -16,6 +15,12 @@ pipeline {
     }
     
     stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs() // Workspace clean karne ka sahi tareeqa yeh hai
+            }
+        }
+        
         stage('SonarQube Analysis') {
             steps {
                 script {
