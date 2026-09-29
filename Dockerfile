@@ -5,7 +5,11 @@ WORKDIR /app
 
 # Copy package files and install dependencies
 COPY package*.json ./
-RUN npm ci
+
+# Increase npm network timeout and retry limits to prevent ETIMEDOUT errors
+RUN npm config set fetch-retries 5 \
+    && npm config set fetch-retry-maxtimeout 120000 \
+    && npm ci
 
 # Copy all source code
 COPY . .
