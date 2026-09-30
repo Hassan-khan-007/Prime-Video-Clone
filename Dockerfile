@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Increase npm network timeout and retry limits to prevent ETIMEDOUT errors
-RUN RUN npm config set fetch-retries 10 \
+RUN npm config set fetch-retries 10 \
     && npm config set fetch-retry-maxtimeout 300000 \
     && npm install --network-concurrency 1
 
