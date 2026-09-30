@@ -68,11 +68,11 @@ pipeline {
                             # Login to Docker Hub securely
                             echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
                             
-                            # Build docker image using cache for faster build
-                            docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} .
+                            # Build and explicitly load the image into local docker daemon
+                            docker build --load -t ${IMAGE_NAME}:${BUILD_NUMBER} .
                         """
                         
-                        // Retry block to handle network timeout issues safely during docker push
+                        // Retry block to handle network timeout safely during push
                         retry(3) {
                             sh """
                                 docker push ${IMAGE_NAME}:${BUILD_NUMBER}
