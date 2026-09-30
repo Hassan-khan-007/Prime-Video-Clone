@@ -58,7 +58,30 @@ pipeline {
             }
         }
         
-        stage('Build and Push Docker Image') {
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh """
+                        # Build and explicitly load the image into local docker daemon
+                        docker build --load -t ${IMAGE_NAME}:${BUILD_NUMBER} .
+                    """
+                }
+            }
+        }
+        
+        stage('Trivy Image Scan') {
+            steps {
+                script {
+                    // Trivy scan for High and Critical vulnerabilities
+                    // --exit-code 1 means pipeline will fail if vulnerabilities are found
+                    sh """
+                        trivy image --exit-code 0 --severity HIGH,CRITICAL ${IMAGE_NAME}:${BUILD_NUMBER}
+                    """
+                }
+            }
+        }
+        
+        stage('Push Docker Image') {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", 
@@ -67,9 +90,6 @@ pipeline {
                         sh """
                             # Login to Docker Hub securely
                             echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
-                            
-                            # Build and explicitly load the image into local docker daemon
-                            docker build --load -t ${IMAGE_NAME}:${BUILD_NUMBER} .
                         """
                         
                         // Retry block to handle network timeout safely during push
