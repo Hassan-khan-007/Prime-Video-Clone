@@ -3,8 +3,8 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Install Python and build tools for native modules (like mdns2 / node-gyp)
-RUN apk add --no-cache python3 make g++
+# Install Python, build tools, and mDNS development headers required for mdns2
+RUN apk add --no-cache python3 make g++ mdns-responder-dev
 
 # Copy package files and install dependencies
 COPY package*.json ./
