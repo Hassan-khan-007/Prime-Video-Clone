@@ -62,7 +62,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        # Build and explicitly load the image into local docker daemon
+                        # Build and explicitly load the image into local docker daemon using Buildx
                         docker build --load -t ${IMAGE_NAME}:${BUILD_NUMBER} .
                     """
                 }
@@ -72,10 +72,9 @@ pipeline {
         stage('Trivy Image Scan') {
             steps {
                 script {
-                    // Trivy scan for High and Critical vulnerabilities
-                    // --exit-code 1 means pipeline will fail if vulnerabilities are found
+                    // Run Trivy as a transient container to scan the built image securely
                     sh """
-                        trivy image --exit-code 0 --severity HIGH,CRITICAL ${IMAGE_NAME}:${BUILD_NUMBER}
+                        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:latest image --exit-code 0 --severity HIGH,CRITICAL ${IMAGE_NAME}:${BUILD_NUMBER}
                     """
                 }
             }
