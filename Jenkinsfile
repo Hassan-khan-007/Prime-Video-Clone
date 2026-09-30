@@ -6,7 +6,7 @@ pipeline {
     }
     
     environment {
-        IMAGE_NAME = 'dockerhubhassankhan786/prime-video-clone'
+        IMAGE_NAME = 'hassankhan786/prime-video-clone'
         DOCKER_CREDENTIALS_ID = 'dockerhub'
     }
     
