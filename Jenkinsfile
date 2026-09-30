@@ -28,7 +28,7 @@ pipeline {
                             ${scannerHome}/bin/sonar-scanner \
                             -Dsonar.projectKey=my-project \
                             -Dsonar.sources=. \
-                            -Dsonar.host.url=http://host.docker.internal:9000
+                            -Dsonar.host.url=http://172.29.144.1:9000
                         """
                     }
                 }
