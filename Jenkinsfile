@@ -40,7 +40,7 @@ pipeline {
                 script {
                     timeout(time: 5, unit: 'MINUTES') {
                         def qg = waitForQualityGate()
-                
+              
                         if (qg.status != 'OK') {
                             error "Pipeline aborted because Quality Gate failed: ${qg.status}"
                         } else {
@@ -53,10 +53,10 @@ pipeline {
         
         stage('OWASP Security Scan') {
             steps {
-                // Yeh step project ke dependencies ko scan karega
+                // Project ki dependencies ko scan karega
                 dependencyCheck additionalArguments: '--scan . --disableAssembly', odcInstallation: 'OWASP-Check'
                 
-                // Scan ke reports ko Jenkins dashboard par dekhne ke liye
+                // Scan reports ko Jenkins dashboard par publish karega
                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
             }
         }
@@ -65,18 +65,19 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", 
-                                                      usernameVariable: 'DOCKER_USER', 
-                                                      passwordVariable: 'DOCKER_PASS')]) {
-                        sh '''
+                                                        usernameVariable: 'DOCKER_USER', 
+                                                        passwordVariable: 'DOCKER_PASS')]) {
+                        // Double quotes (""") use karne se Groovy variables (${IMAGE_NAME}, ${BUILD_NUMBER}) sahi se resolve honge
+                        sh """
                             # Build docker image using build number tag
                             docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} .
                             
                             # Login to Docker Hub securely
-                            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                            echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
                             
                             # Push image to Docker Hub
                             docker push ${IMAGE_NAME}:${BUILD_NUMBER}
-                        '''
+                        """
                     }
                 }
             }
