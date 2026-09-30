@@ -70,7 +70,7 @@ pipeline {
                         // Double quotes (""") use karne se Groovy variables (${IMAGE_NAME}, ${BUILD_NUMBER}) sahi se resolve honge
                         sh """
                             # Build docker image using build number tag
-                            docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} .
+                            docker build --no-cache -t ${IMAGE_NAME}:${BUILD_NUMBER} .
                             
                             # Login to Docker Hub securely
                             echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
