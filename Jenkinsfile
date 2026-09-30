@@ -51,6 +51,16 @@ pipeline {
             }
         }
         
+        stage('OWASP Security Scan') {
+            steps {
+                // Yeh step project ke dependencies ko scan karega
+                dependencyCheck additionalArguments: '--scan . --disableAssembly', odcInstallation: 'OWASP-Check'
+                
+                // Scan ke reports ko Jenkins dashboard par dekhne ke liye
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+        
         stage('Build and Push Docker Image') {
             steps {
                 script {
