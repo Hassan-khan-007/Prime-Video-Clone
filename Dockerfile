@@ -3,8 +3,8 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Install Python, build tools, and Avahi headers required for mdns2 (dns_sd.h)
-RUN apk add --no-cache python3 make g++ avahi-dev avahi-compat-libdns_sd
+# Install Python, build tools, Avahi, and ZeroMQ development headers required for native modules
+RUN apk add --no-cache python3 make g++ avahi-dev avahi-compat-libdns_sd zeromq zeromq-dev
 
 # Copy package files and install dependencies
 COPY package*.json ./
