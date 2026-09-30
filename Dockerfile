@@ -3,6 +3,9 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+# Install Python and build tools for native modules (like mdns2 / node-gyp)
+RUN apk add --no-cache python3 make g++
+
 # Copy package files and install dependencies
 COPY package*.json ./
 
