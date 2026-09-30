@@ -65,18 +65,19 @@ pipeline {
                                                 usernameVariable: 'DOCKER_USER', 
                                                 passwordVariable: 'DOCKER_PASS')]) {
                         sh """
-                            # Build docker image using build number tag
-                            docker build --no-cache -t ${IMAGE_NAME}:${BUILD_NUMBER} .
-                            
                             # Login to Docker Hub securely
                             echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
                             
-                            # Push image to Docker Hub
-                            docker push ${IMAGE_NAME}:${BUILD_NUMBER}
-                            
-                            # Force exit code 0 so pipeline marks success on successful push
-                            exit 0
+                            # Build docker image using cache for faster build
+                            docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} .
                         """
+                        
+                        // Retry block to handle network timeout issues safely during docker push
+                        retry(3) {
+                            sh """
+                                docker push ${IMAGE_NAME}:${BUILD_NUMBER}
+                            """
+                        }
                     }
                 }
             }
