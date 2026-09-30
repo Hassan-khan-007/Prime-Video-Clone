@@ -72,9 +72,9 @@ pipeline {
         stage('Trivy Image Scan') {
             steps {
                 script {
-                    // Run Trivy as a transient container to scan the built image securely
+                    // Added --dns=8.8.8.8 so container can resolve network and download DB successfully
                     sh """
-                        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:latest image --skip-update --exit-code 0 --severity HIGH,CRITICAL ${IMAGE_NAME}:${BUILD_NUMBER}
+                        docker run --rm --dns=8.8.8.8 -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:latest image --exit-code 0 --severity HIGH,CRITICAL ${IMAGE_NAME}:${BUILD_NUMBER}
                     """
                 }
             }
