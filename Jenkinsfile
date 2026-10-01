@@ -53,7 +53,8 @@ pipeline {
         
         stage('OWASP Security Scan') {
             steps {
-                dependencyCheck additionalArguments: '--scan . --disableAssembly', odcInstallation: 'OWASP-Check'
+                // Added --disableCentral to prevent failing on NVD network/API key issues
+                dependencyCheck additionalArguments: '--scan . --disableAssembly --disableCentral', odcInstallation: 'OWASP-Check'
                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
             }
         }
