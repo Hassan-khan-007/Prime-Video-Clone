@@ -54,7 +54,7 @@ pipeline {
         stage('OWASP Security Scan') {
             steps {
                 // Added --disableCentral to prevent failing on NVD network/API key issues
-                dependencyCheck additionalArguments: '-n --scan . --disableAssembly', odcInstallation: 'OWASP-Check'
+                dependencyCheck additionalArguments: "--scan . --disableAssembly --nvdApiKey ${NVD_API_KEY}", odcInstallation: 'OWASP-Check'
                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
             }
         }
