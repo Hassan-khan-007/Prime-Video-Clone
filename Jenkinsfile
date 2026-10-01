@@ -54,8 +54,7 @@ pipeline {
         stage('OWASP Security Scan') {
             steps {
                 withCredentials([string(credentialsId: 'nvd-api-key', variable: 'NVD_API_KEY')]) {
-                    // Yahan environment variable ko safely access kiya gaya hai
-                    sh 'dependency-check --scan . --disableAssembly --nvdApiKey ${NVD_API_KEY}'
+                    dependencyCheck additionalArguments: "--scan . --disableAssembly --nvdApiKey ${env.NVD_API_KEY}", odcInstallation: 'OWASP-Check'
                 }
                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
             }
